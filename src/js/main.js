@@ -161,6 +161,12 @@ class GameApp {
         this.hideAllScreens();
         this.startScreen.classList.remove('hidden');
         
+        // 确保playHint隐藏
+        const playHint = document.getElementById('playHint');
+        if (playHint) {
+            playHint.classList.add('hidden');
+        }
+        
         // 更新最高分显示
         const highScore = this.storage.getHighScore();
         const highScoreElement = document.getElementById('highScore');
@@ -196,6 +202,12 @@ class GameApp {
     showGameOverScreen() {
         this.hideAllScreens();
         this.gameOverScreen.classList.remove('hidden');
+        
+        // 确保playHint隐藏
+        const playHint = document.getElementById('playHint');
+        if (playHint) {
+            playHint.classList.add('hidden');
+        }
         
         // 更新分数显示
         const finalScore = this.game.getScore();

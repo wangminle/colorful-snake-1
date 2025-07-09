@@ -105,6 +105,9 @@ class Game {
         this.countdownStartTime = performance.now();
         console.log('状态设置为COUNTDOWN:', this.currentState);
         
+        // 确保playHint默认隐藏，倒计时结束后才显示
+        this.hidePlayHint();
+        
         // 确保暂停覆盖层隐藏
         const pauseOverlay = document.getElementById('pauseOverlay');
         console.log('检查暂停覆盖层:', pauseOverlay);
@@ -136,6 +139,9 @@ class Game {
     gameOver() {
         this.currentState = this.STATES.GAME_OVER;
         this.gameOverStartTime = performance.now();
+        
+        // 游戏结束时隐藏playHint
+        this.hidePlayHint();
         
         // 保存最高分
         const isNewRecord = this.storage.setHighScore(this.score);
@@ -181,6 +187,8 @@ class Game {
             this.lastMoveTime = currentTime;
             // 清空倒计时显示并更新UI
             this.updateCountdownDisplay(0);
+            // 倒计时结束时显示playHint
+            this.showPlayHint();
             this.updateUI();
         } else {
             this.updateCountdownDisplay(Math.ceil(remaining));
@@ -265,29 +273,20 @@ class Game {
         const scoreElement = document.getElementById('scoreValue');
         const pauseOverlay = document.getElementById('pauseOverlay');
         const playHint = document.getElementById('playHint');
-        const gameScreen = document.getElementById('gameScreen');
         
         if (scoreElement) {
             scoreElement.textContent = this.score;
         }
 
-        // 只有在游戏页面可见且游戏状态为PLAYING或PAUSED时才显示提示
-        const isGameScreenVisible = gameScreen && !gameScreen.classList.contains('hidden');
-        
-        if (isGameScreenVisible && (this.currentState === this.STATES.PLAYING || this.currentState === this.STATES.PAUSED)) {
-            // 根据游戏状态管理提示信息
-            if (this.currentState === this.STATES.PLAYING) {
-                playHint.textContent = '按空格键暂停';
-                playHint.classList.remove('hidden');
-                pauseOverlay.classList.add('hidden');
-            } else if (this.currentState === this.STATES.PAUSED) {
-                playHint.textContent = '按空格键恢复';
-                playHint.classList.remove('hidden');
-                pauseOverlay.classList.remove('hidden');
-            }
+        // 根据游戏状态更新提示文本和暂停覆盖层
+        if (this.currentState === this.STATES.PLAYING) {
+            if (playHint) playHint.textContent = '按空格键暂停';
+            if (pauseOverlay) pauseOverlay.classList.add('hidden');
+        } else if (this.currentState === this.STATES.PAUSED) {
+            if (playHint) playHint.textContent = '按空格键恢复';
+            if (pauseOverlay) pauseOverlay.classList.remove('hidden');
         } else {
-            // 在所有其他情况下都隐藏提示
-            if (playHint) playHint.classList.add('hidden');
+            // 在其他状态下隐藏暂停覆盖层
             if (pauseOverlay) pauseOverlay.classList.add('hidden');
         }
     }
@@ -311,6 +310,26 @@ class Game {
         const gameOverCountdownElement = document.getElementById('gameOverCountdown');
         if (gameOverCountdownElement) {
             gameOverCountdownElement.textContent = `${count}秒后返回主菜单`;
+        }
+    }
+
+    /**
+     * 显示playHint提示
+     */
+    showPlayHint() {
+        const playHint = document.getElementById('playHint');
+        if (playHint) {
+            playHint.classList.remove('hidden');
+        }
+    }
+
+    /**
+     * 隐藏playHint提示
+     */
+    hidePlayHint() {
+        const playHint = document.getElementById('playHint');
+        if (playHint) {
+            playHint.classList.add('hidden');
         }
     }
 
