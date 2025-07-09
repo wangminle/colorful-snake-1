@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彩色贪食蛇</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 初始页面 -->
+        <div id="startScreen" class="screen">
+            <h1 class="game-title">彩色贪食蛇</h1>
+            <div class="high-score">最高分: <span id="highScore">0</span></div>
+            <button id="startButton" class="btn">开始游戏</button>
+        </div>
+        
+        <!-- 游戏界面 -->
+        <div id="gameScreen" class="hidden">
+            <div id="gameUI">
+                <span>得分: <span id="scoreValue">0</span></span>
+            </div>
+            <div id="countdown" class="countdown hidden"></div>
+            <div id="playHint" class="pause-hint top-hint hidden">按空格键暂停</div>
+            <canvas id="gameCanvas" width="600" height="600" tabindex="0"></canvas>
+            <div id="pauseOverlay" class="pause-overlay hidden">
+            </div>
+        </div>
+
+        <!-- 游戏结束界面 -->
+        <div id="gameOverScreen" class="screen hidden">
+            <h2 class="game-over-title">Game Over</h2>
+            <div class="final-score">本次得分: <span id="finalScore">0</span></div>
+            <div class="high-score">最高分: <span id="finalHighScore">0</span></div>
+            <div class="countdown-text" id="gameOverCountdown"></div>
+        </div>
+    </div>
+
+    <!-- 导入所有JS文件 -->
+    <script src="js/Storage.js"></script>
+    <script src="js/Snake.js"></script>
+    <script src="js/Food.js"></script>
+    <script src="js/Renderer.js"></script>
+    <script src="js/Game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

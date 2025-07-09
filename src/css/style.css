@@ -1,0 +1,256 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.game-container {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    background-color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#gameUI {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #006400; /* 深绿色 */
+    font-size: 1.2rem;
+    font-weight: bold;
+    z-index: 10;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+#gameUI > span {
+    background-color: rgba(255, 255, 255, 0.15); /* 15%不透明度，85%透明度 */
+    padding: 5px 10px;
+    border-radius: 15px;
+    backdrop-filter: blur(5px); /* 添加毛玻璃效果 */
+}
+
+#gameCanvas {
+    border: 2px solid #ddd;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* 屏幕通用样式 */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.9);
+}
+
+/* 初始页面样式 */
+.game-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #a8e6cf);
+    background-size: 200% 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbow 3s linear infinite;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+}
+
+@keyframes rainbow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.high-score {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+.btn {
+    font-size: 1.3rem;
+    padding: 15px 40px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(45deg, #764ba2, #667eea);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* 游戏页面UI */
+.game-info {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    z-index: 10;
+}
+
+.score {
+    color: #4ecdc4;
+    text-shadow: 0 0 10px rgba(78, 205, 196, 0.6);
+}
+
+/* 倒计时样式 */
+.countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 6rem;
+    font-weight: bold;
+    color: #00008B; /* 深蓝色 */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 50;
+    pointer-events: none; /* 允许点击穿透 */
+}
+
+/* 暂停覆盖层 */
+.pause-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent; /* 仅作为容器，背景由Renderer绘制 */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* 改为顶部对齐 */
+    align-items: center;
+    padding-top: 20px; /* 距离顶部20px */
+    z-index: 100;
+    pointer-events: none; /* 允许操作下方元素 */
+    color: #ffd700; /* 金色，用于文字 */
+}
+
+.pause-text {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    animation: pulse 2s infinite;
+}
+
+.pause-hint {
+    font-size: 1.2rem;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+.top-hint {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    pointer-events: none;
+}
+
+/* 游戏结束页面样式 */
+.game-over-title {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #ff6b6b;
+    text-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.final-score {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #4ecdc4;
+    text-shadow: 0 0 10px rgba(78, 205, 196, 0.6);
+}
+
+.countdown-text {
+    font-size: 1.3rem;
+    margin-top: 30px;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+/* 响应式设计 */
+@media (max-width: 900px) {
+    .game-container {
+        transform: scale(0.8);
+    }
+    
+    .game-title {
+        font-size: 2.5rem;
+    }
+    
+    .game-over-title {
+        font-size: 3rem;
+    }
+} 

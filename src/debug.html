@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彩色贪食蛇 - 调试版</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .debug-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-width: 300px;
+            z-index: 1000;
+        }
+        .debug-panel h3 {
+            margin: 0 0 10px 0;
+            color: #ffd700;
+        }
+        .debug-info {
+            margin: 5px 0;
+        }
+        .error {
+            color: #ff6b6b;
+        }
+        .success {
+            color: #4ecdc4;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-panel">
+        <h3>调试信息</h3>
+        <div id="debugInfo">
+            <div class="debug-info">状态: <span id="debugState">初始化中...</span></div>
+            <div class="debug-info">分数: <span id="debugScore">0</span></div>
+            <div class="debug-info">蛇长度: <span id="debugSnakeLength">0</span></div>
+            <div class="debug-info">错误: <span id="debugErrors">无</span></div>
+        </div>
+        <button onclick="window.debugGame?.resetHighScore()" style="margin-top: 10px;">重置最高分</button>
+    </div>
+
+    <div class="game-container">
+        <canvas id="gameCanvas" width="800" height="800"></canvas>
+        <div class="ui-overlay">
+            <!-- 初始页面 -->
+            <div id="startScreen" class="screen">
+                <h1 class="game-title">彩色贪食蛇</h1>
+                <div class="high-score">最高分: <span id="highScore">0</span></div>
+                <button id="startButton" class="btn">开始游戏</button>
+            </div>
+            
+            <!-- 游戏页面UI -->
+            <div id="gameScreen" class="screen hidden">
+                <div class="game-info">
+                    <div class="score">得分: <span id="currentScore">0</span></div>
+                    <div class="countdown" id="countdown"></div>
+                    <div class="pause-hint" id="pauseHint">按空格键暂停</div>
+                </div>
+                <div id="pauseOverlay" class="pause-overlay hidden">
+                    <div class="pause-text">游戏暂停</div>
+                    <div class="pause-hint">按空格键继续</div>
+                </div>
+            </div>
+            
+            <!-- 游戏结束页面 -->
+            <div id="gameOverScreen" class="screen hidden">
+                <h2 class="game-over-title">Game Over</h2>
+                <div class="final-score">本次得分: <span id="finalScore">0</span></div>
+                <div class="high-score">最高分: <span id="finalHighScore">0</span></div>
+                <div class="countdown-text" id="gameOverCountdown"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导入所有JS文件 -->
+    <script src="js/Storage.js"></script>
+    <script src="js/Snake.js"></script>
+    <script src="js/Food.js"></script>
+    <script src="js/Renderer.js"></script>
+    <script src="js/Game.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // 调试代码
+        let debugUpdateInterval;
+        
+        function updateDebugInfo() {
+            try {
+                const debugState = document.getElementById('debugState');
+                const debugScore = document.getElementById('debugScore');
+                const debugSnakeLength = document.getElementById('debugSnakeLength');
+                const debugErrors = document.getElementById('debugErrors');
+                
+                if (window.gameApp && window.gameApp.game) {
+                    const game = window.gameApp.game;
+                    debugState.textContent = game.getCurrentState();
+                    debugScore.textContent = game.getScore();
+                    debugSnakeLength.textContent = game.snake.getLength();
+                    debugState.className = 'success';
+                } else {
+                    debugState.textContent = '游戏未初始化';
+                    debugState.className = 'error';
+                }
+            } catch (error) {
+                const debugErrors = document.getElementById('debugErrors');
+                debugErrors.textContent = error.message;
+                debugErrors.className = 'error';
+                console.error('调试信息更新错误:', error);
+            }
+        }
+        
+        // 监听错误
+        window.addEventListener('error', function(e) {
+            const debugErrors = document.getElementById('debugErrors');
+            debugErrors.textContent = e.message;
+            debugErrors.className = 'error';
+            console.error('JavaScript错误:', e);
+        });
+        
+        // 等待DOM加载完成后开始调试
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM已加载，开始调试...');
+            
+            // 每500ms更新一次调试信息
+            debugUpdateInterval = setInterval(updateDebugInfo, 500);
+            
+            // 延迟检查游戏是否正确初始化
+            setTimeout(() => {
+                if (!window.gameApp) {
+                    console.error('GameApp未能正确初始化！');
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 
