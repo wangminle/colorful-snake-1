@@ -7,14 +7,14 @@ class GameApp {
         this.canvas = null;
         this.game = null;
         this.storage = new Storage();
-        
+
         // 页面元素
         this.startScreen = null;
         this.gameScreen = null;
         this.gameOverScreen = null;
         this.startButton = null;
         this.previousGameState = null;
-        
+
         this.init();
     }
 
@@ -40,31 +40,31 @@ class GameApp {
         this.gameScreen = document.getElementById('gameScreen');
         this.gameOverScreen = document.getElementById('gameOverScreen');
         this.startButton = document.getElementById('startButton');
-        
+
         // 检查元素是否存在
-        if (!this.canvas || !this.startScreen || !this.gameScreen || 
+        if (!this.canvas || !this.startScreen || !this.gameScreen ||
             !this.gameOverScreen || !this.startButton) {
             console.error('页面元素初始化失败');
             return;
         }
-        
+
         // 初始化游戏
         console.log('开始初始化Game实例...');
         this.game = new Game(this.canvas);
         console.log('Game实例创建完成');
-        
+
         // 设置事件监听器
         this.setupEventListeners();
         console.log('事件监听器设置完成');
-        
+
         // 显示初始页面
         this.showStartScreen();
         console.log('初始页面显示完成');
-        
+
         // 启动统一的游戏循环
         this.gameLoop();
         console.log('统一游戏循环已启动');
-        
+
         console.log('彩色贪食蛇游戏初始化完成！');
     }
 
@@ -76,19 +76,19 @@ class GameApp {
         this.startButton.addEventListener('click', () => {
             this.startGame();
         });
-        
+
         // 统一的键盘事件处理
         document.addEventListener('keydown', (event) => {
             // 防止页面滚动
             if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.code)) {
                 event.preventDefault();
             }
-            
+
             // 在开始页面按Enter开始游戏
             if (event.code === 'Enter' && this.game.getCurrentState() === this.game.STATES.START) {
                 this.startGame();
             }
-            
+
             // 将所有游戏相关的键盘事件转发给Game对象
             if (this.game && this.game.handleKeyPress) {
                 this.game.handleKeyPress(event);
@@ -132,26 +132,8 @@ class GameApp {
      * 开始游戏
      */
     startGame() {
-        console.log('=== 开始游戏调试信息 ===');
-        console.log('当前游戏状态:', this.game.getCurrentState());
-        
-        // 检查DOM元素状态
-        const pauseOverlay = document.getElementById('pauseOverlay');
-        console.log('暂停覆盖层元素:', pauseOverlay);
-        console.log('暂停覆盖层类名:', pauseOverlay ? pauseOverlay.className : 'null');
-        console.log('暂停覆盖层样式显示:', pauseOverlay ? window.getComputedStyle(pauseOverlay).display : 'null');
-        
         this.game.startNewGame();
-        console.log('startNewGame调用后的状态:', this.game.getCurrentState());
-        
         this.showGameScreen();
-        console.log('showGameScreen调用完成');
-        
-        // 再次检查状态
-        setTimeout(() => {
-            console.log('1秒后的游戏状态:', this.game.getCurrentState());
-            console.log('1秒后暂停覆盖层类名:', pauseOverlay ? pauseOverlay.className : 'null');
-        }, 1000);
     }
 
     /**
@@ -160,20 +142,16 @@ class GameApp {
     showStartScreen() {
         this.hideAllScreens();
         this.startScreen.classList.remove('hidden');
-        
-        // 确保playHint隐藏
-        const playHint = document.getElementById('playHint');
-        if (playHint) {
-            playHint.classList.add('hidden');
-        }
-        
+
+
+
         // 更新最高分显示
         const highScore = this.storage.getHighScore();
         const highScoreElement = document.getElementById('highScore');
         if (highScoreElement) {
             highScoreElement.textContent = highScore;
         }
-        
+
         // 聚焦开始按钮
         this.startButton.focus();
     }
@@ -184,13 +162,7 @@ class GameApp {
     showGameScreen() {
         this.hideAllScreens();
         this.gameScreen.classList.remove('hidden');
-        
-        // 确保暂停覆盖层隐藏
-        const pauseOverlay = document.getElementById('pauseOverlay');
-        if (pauseOverlay) {
-            pauseOverlay.classList.add('hidden');
-        }
-        
+
         // 聚焦Canvas以确保键盘事件正常工作
         this.canvas.focus();
         this.canvas.setAttribute('tabindex', '0');
@@ -202,24 +174,18 @@ class GameApp {
     showGameOverScreen() {
         this.hideAllScreens();
         this.gameOverScreen.classList.remove('hidden');
-        
-        // 确保playHint隐藏
-        const playHint = document.getElementById('playHint');
-        if (playHint) {
-            playHint.classList.add('hidden');
-        }
-        
+
         // 更新分数显示
         const finalScore = this.game.getScore();
         const highScore = this.storage.getHighScore();
-        
+
         const finalScoreElement = document.getElementById('finalScore');
         const finalHighScoreElement = document.getElementById('finalHighScore');
-        
+
         if (finalScoreElement) {
             finalScoreElement.textContent = finalScore;
         }
-        
+
         if (finalHighScoreElement) {
             finalHighScoreElement.textContent = highScore;
         }
@@ -258,7 +224,7 @@ let gameApp;
 // 页面加载完成后启动应用
 document.addEventListener('DOMContentLoaded', () => {
     gameApp = new GameApp();
-    
+
     // 将游戏应用实例添加到全局作用域（方便调试）
     window.gameApp = gameApp;
 });

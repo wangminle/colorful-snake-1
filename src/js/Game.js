@@ -7,38 +7,38 @@ class Game {
         this.canvas = canvas;
         this.gridSize = 20;
         this.gridCount = 30;
-        
+
         // 游戏状态枚举
         this.STATES = {
             START: 'start',
-            COUNTDOWN: 'countdown', 
+            COUNTDOWN: 'countdown',
             PLAYING: 'playing',
             PAUSED: 'paused',
             GAME_OVER: 'gameOver'
         };
-        
+
         // 初始化组件
         this.storage = new Storage();
         this.snake = new Snake(this.gridSize, this.gridCount);
         this.renderer = new Renderer(canvas, this.gridSize, this.gridCount);
         this.food = new Food(this.gridSize, this.gridCount);
-        
+
         // 游戏状态
         this.currentState = this.STATES.START;
         this.score = 0;
         this.pointsPerFood = 20;
-        
+
         // 移动和时间控制
         this.moveSpeed = 5; // 每秒移动5格
         this.moveInterval = 1000 / this.moveSpeed; // 200ms移动一次
         this.lastMoveTime = 0;
-        
+
         // 倒计时
         this.countdownTime = 3; // 3秒倒计时
         this.countdownStartTime = 0;
         this.gameOverCountdown = 5; // 游戏结束5秒倒计时
         this.gameOverStartTime = 0;
-        
+
         // 开始主循环
         this.lastFrameTime = 0;
         console.log('Game类初始化完成');
@@ -99,24 +99,18 @@ class Game {
         this.score = 0;
         this.snake.reset();
         this.food.regenerate(this.snake.getOccupiedPositions());
-        
+
         // 开始倒计时
         this.currentState = this.STATES.COUNTDOWN;
         this.countdownStartTime = performance.now();
         console.log('状态设置为COUNTDOWN:', this.currentState);
-        
-        // 确保playHint默认隐藏，倒计时结束后才显示
-        this.hidePlayHint();
-        
+
         // 确保暂停覆盖层隐藏
         const pauseOverlay = document.getElementById('pauseOverlay');
-        console.log('检查暂停覆盖层:', pauseOverlay);
         if (pauseOverlay) {
-            console.log('隐藏暂停覆盖层前的类名:', pauseOverlay.className);
             pauseOverlay.classList.add('hidden');
-            console.log('隐藏暂停覆盖层后的类名:', pauseOverlay.className);
         }
-        
+
         this.updateUI();
         console.log('新游戏开始，状态:', this.currentState);
     }
@@ -139,16 +133,14 @@ class Game {
     gameOver() {
         this.currentState = this.STATES.GAME_OVER;
         this.gameOverStartTime = performance.now();
-        
-        // 游戏结束时隐藏playHint
-        this.hidePlayHint();
-        
+
+
         // 保存最高分
         const isNewRecord = this.storage.setHighScore(this.score);
         if (isNewRecord) {
             console.log('新纪录！');
         }
-        
+
         this.updateUI();
     }
 
@@ -168,7 +160,7 @@ class Game {
                 this.updateGameOver(currentTime);
                 break;
         }
-        
+
         // 更新食物动画
         this.food.update(currentTime);
     }
@@ -180,15 +172,13 @@ class Game {
     updateCountdown(currentTime) {
         const elapsed = (currentTime - this.countdownStartTime) / 1000;
         const remaining = Math.max(0, this.countdownTime - elapsed);
-        
+
         if (remaining <= 0) {
             // 倒计时结束，开始游戏
             this.currentState = this.STATES.PLAYING;
             this.lastMoveTime = currentTime;
             // 清空倒计时显示并更新UI
             this.updateCountdownDisplay(0);
-            // 倒计时结束时显示playHint
-            this.showPlayHint();
             this.updateUI();
         } else {
             this.updateCountdownDisplay(Math.ceil(remaining));
@@ -203,13 +193,13 @@ class Game {
         // 检查是否该移动蛇
         if (currentTime - this.lastMoveTime >= this.moveInterval) {
             const moveSuccess = this.snake.move();
-            
+
             if (!moveSuccess) {
                 // 撞墙或撞自己，游戏结束
                 this.gameOver();
                 return;
             }
-            
+
             // 检查是否吃到食物
             if (this.snake.checkFoodCollision(this.food.getGridPosition())) {
                 // 吃到食物
@@ -220,7 +210,7 @@ class Game {
                 // 没吃到食物，移除蛇尾
                 this.snake.removeTail();
             }
-            
+
             this.lastMoveTime = currentTime;
             this.updateUI();
         }
@@ -233,13 +223,13 @@ class Game {
     updateGameOver(currentTime) {
         const elapsed = (currentTime - this.gameOverStartTime) / 1000;
         const remaining = Math.max(0, this.gameOverCountdown - elapsed);
-        
+
         if (remaining <= 0) {
             // 倒计时结束，返回开始页面
             this.currentState = this.STATES.START;
             this.updateUI();
         }
-        
+
         this.updateGameOverDisplay(Math.ceil(remaining));
     }
 
@@ -249,16 +239,16 @@ class Game {
     render() {
         // 清空画布
         this.renderer.clear();
-        
+
         // 根据状态绘制不同内容
         if (this.currentState === this.STATES.COUNTDOWN ||
             this.currentState === this.STATES.PLAYING ||
             this.currentState === this.STATES.PAUSED) {
-            
+
             // 绘制蛇和食物
             this.renderer.drawSnake(this.snake);
             this.renderer.drawFood(this.food);
-            
+
             // 绘制暂停覆盖层
             if (this.currentState === this.STATES.PAUSED) {
                 this.renderer.drawPauseOverlay();
@@ -272,18 +262,15 @@ class Game {
     updateUI() {
         const scoreElement = document.getElementById('scoreValue');
         const pauseOverlay = document.getElementById('pauseOverlay');
-        const playHint = document.getElementById('playHint');
-        
+
         if (scoreElement) {
             scoreElement.textContent = this.score;
         }
 
         // 根据游戏状态更新提示文本和暂停覆盖层
         if (this.currentState === this.STATES.PLAYING) {
-            if (playHint) playHint.textContent = '按空格键暂停';
             if (pauseOverlay) pauseOverlay.classList.add('hidden');
         } else if (this.currentState === this.STATES.PAUSED) {
-            if (playHint) playHint.textContent = '按空格键恢复';
             if (pauseOverlay) pauseOverlay.classList.remove('hidden');
         } else {
             // 在其他状态下隐藏暂停覆盖层
@@ -299,6 +286,11 @@ class Game {
         const countdownElement = document.getElementById('countdown');
         if (countdownElement) {
             countdownElement.textContent = count > 0 ? count : '';
+            if (count > 0) {
+                countdownElement.classList.remove('hidden');
+            } else {
+                countdownElement.classList.add('hidden');
+            }
         }
     }
 
@@ -313,25 +305,7 @@ class Game {
         }
     }
 
-    /**
-     * 显示playHint提示
-     */
-    showPlayHint() {
-        const playHint = document.getElementById('playHint');
-        if (playHint) {
-            playHint.classList.remove('hidden');
-        }
-    }
 
-    /**
-     * 隐藏playHint提示
-     */
-    hidePlayHint() {
-        const playHint = document.getElementById('playHint');
-        if (playHint) {
-            playHint.classList.add('hidden');
-        }
-    }
 
     /**
      * 获取当前游戏状态

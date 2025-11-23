@@ -4,11 +4,12 @@
 
 ![游戏状态](https://img.shields.io/badge/Status-Stable-brightgreen)
 ![技术栈](https://img.shields.io/badge/Tech-HTML5%20Canvas%20%7C%20Vanilla%20JavaScript%20%7C%20CSS3-blue)
-![版本](https://img.shields.io/badge/Version-v3.0-orange)
+![版本](https://img.shields.io/badge/Version-v1.1.0-orange)
 
 ## 🎮 游戏功能
 
 ### 视觉
+
 - 彩色蛇身: 赤橙黄绿青蓝紫循环配色。
 - 菱形蛇头: 黑色菱形，包含眼睛效果。
 - 动态食物: 粉色和白色交替闪烁的圆形食物，直径15像素。
@@ -16,13 +17,15 @@
 - UI: 得分和暂停提示具有半透明背景及圆角。
 
 ### 游戏体验
+
 - 移动速度: 每秒移动5格。
 - 游戏区域: 30x30网格 (600x600px)。
-- 暂停功能: 空格键切换游戏暂停/恢复，顶部显示提示。
+- 暂停功能: 空格键切换游戏暂停/恢复，屏幕中央显示"PAUSED"及恢复提示。
 - 控制: 键盘方向键控制蛇的移动方向。
 - 流程: 包含开始、倒计时、游戏进行和结束页面。
 
 ### 技术实现
+
 - 状态管理: 通过枚举实现游戏状态切换（START/COUNTDOWN/PLAYING/PAUSED/GAME_OVER）。
 - 碰撞检测: 支持边界和自身碰撞检测，并修复了尾巴碰撞bug。
 - 页面控制: UI元素根据游戏状态进行显示和隐藏。
@@ -31,12 +34,14 @@
 ## 🚀 运行项目
 
 ### 环境
+
 - 现代浏览器 (支持HTML5 Canvas和ES6+)
 - HTTP服务器 (不可直接打开HTML文件)
 
 ### 启动步骤
 
 #### 方法一：使用Node.js
+
 ```bash
 # 1. 全局安装live-server (如果未安装)
 npm install -g live-server
@@ -49,6 +54,7 @@ live-server src --port=8080 --open
 ```
 
 #### 方法二：使用Python
+
 ```bash
 # Python 3
 cd colorful-snake-1/src
@@ -62,12 +68,14 @@ python -m SimpleHTTPServer 8080
 ```
 
 #### 方法三：其他HTTP服务器
+
 ```bash
 # 例如使用Node.js的http-server
 npx http-server src -p 8080 -o
 ```
 
 ### 🎮 游戏操作
+
 - **方向键**: 控制蛇的移动方向。
 - **空格键**: 暂停/恢复游戏。
 - **Enter键**: 在开始页面启动游戏。
@@ -104,36 +112,28 @@ colorful-snake-1/
 - **localStorage**: 用于客户端数据持久化（最高分）。
 
 ### 设计思路
+
 - **模块化**: 代码分为多个独立的JavaScript类。
 - **职责分离**: 各模块负责特定功能，例如`Game`管理游戏状态，`Renderer`负责绘制。
 - **状态机**: 游戏状态通过枚举管理，控制游戏流程。
 
 ## ✨ 版本记录
 
-### v3.0
-- 修复蛇自我碰撞检测bug。
-- 恢复并完善暂停功能，优化提示显示逻辑。
-- 调整游戏区域大小和移动速度。
-- 优化UI视觉效果，包括得分和暂停提示背景。
+### v1.1.0
 
-### v2.0
-- 修复核心游戏bug，暂时移除暂停功能。
-- 调整游戏速度和地图大小。
+- 优化暂停功能体验：移除顶部提示，改为屏幕中央显示半透明遮罩及"PAUSED"字样。
+- 修复倒计时显示bug：确保游戏开始时的3秒倒计时正常显示。
+- 界面细节优化：统一隐藏/显示逻辑。
 
-### v1.0
-- 基础功能实现。
-
-## 🎯 游戏规则
-
-- **控制**: 使用方向键控制蛇的移动方向。
-- **得分**: 蛇头碰到食物后，身体增长一节，得20分。
 - **结束**: 撞墙或撞到自己身体游戏结束。
 - **目标**: 挑战最高分。
 
 ## 🛠️ 开发指南
 
 ### 调试
+
 可在浏览器控制台使用以下全局对象进行调试：
+
 ```javascript
 window.debugGame.getScore()      // 获取当前分数
 window.debugGame.getState()      // 获取游戏状态
@@ -142,7 +142,9 @@ window.debugGame.togglePause()   // 切换暂停状态
 ```
 
 ### 可配置项
+
 在 `Game.js` 中可调整以下参数：
+
 ```javascript
 this.gridCount = 30;        // 网格数量
 this.moveSpeed = 5;         // 移动速度（格/秒）
@@ -174,4 +176,4 @@ this.countdownTime = 3;     // 倒计时秒数
 
 ## 🙏 致谢
 
-感谢社区成员的测试和反馈。 
+感谢社区成员的测试和反馈。

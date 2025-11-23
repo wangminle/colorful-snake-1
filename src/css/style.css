@@ -32,18 +32,21 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #006400; /* 深绿色 */
+    color: #006400;
+    /* 深绿色 */
     font-size: 1.2rem;
     font-weight: bold;
     z-index: 10;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-#gameUI > span {
-    background-color: rgba(128, 128, 128, 0.2); /* 20%透明度浅灰色背景 */
+#gameUI>span {
+    background-color: rgba(128, 128, 128, 0.2);
+    /* 20%透明度浅灰色背景 */
     padding: 5px 10px;
     border-radius: 15px;
-    backdrop-filter: blur(1px); /* 添加极轻微的毛玻璃效果 */
+    backdrop-filter: blur(1px);
+    /* 添加极轻微的毛玻璃效果 */
 }
 
 #gameCanvas {
@@ -58,6 +61,10 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
+}
+
+.hidden {
+    display: none !important;
 }
 
 /* 屏幕通用样式 */
@@ -77,7 +84,8 @@ body {
     color: white;
     pointer-events: auto;
     transition: all 0.3s ease;
-    z-index: 200; /* 确保屏幕在所有游戏元素之上 */
+    z-index: 200;
+    /* 确保屏幕在所有游戏元素之上 */
 }
 
 .screen.hidden {
@@ -101,9 +109,17 @@ body {
 }
 
 @keyframes rainbow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .high-score {
@@ -166,10 +182,12 @@ body {
     transform: translate(-50%, -50%);
     font-size: 6rem;
     font-weight: bold;
-    color: #00008B; /* 深蓝色 */
+    color: #00008B;
+    /* 深蓝色 */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 50;
-    pointer-events: none; /* 允许点击穿透 */
+    pointer-events: none;
+    /* 允许点击穿透 */
 }
 
 /* 暂停覆盖层 */
@@ -179,15 +197,19 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: transparent; /* 仅作为容器，背景由Renderer绘制 */
+    background: transparent;
+    /* 仅作为容器，背景由Renderer绘制 */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* 改为顶部对齐 */
+    justify-content: center;
+    /* 改为居中对齐 */
     align-items: center;
-    padding-top: 20px; /* 距离顶部20px */
+    /* padding-top: 20px; 移除顶部距离 */
     z-index: 100;
-    pointer-events: none; /* 允许操作下方元素 */
-    color: #ffd700; /* 金色，用于文字 */
+    pointer-events: none;
+    /* 允许操作下方元素 */
+    color: #ffd700;
+    /* 金色，用于文字 */
 }
 
 .pause-text {
@@ -209,10 +231,12 @@ body {
     transform: translateX(-50%);
     z-index: 50;
     pointer-events: none;
-    background-color: rgba(128, 128, 128, 0.2); /* 20%透明度浅灰色背景 */
+    background-color: rgba(128, 128, 128, 0.2);
+    /* 20%透明度浅灰色背景 */
     padding: 8px 16px;
     border-radius: 20px;
-    backdrop-filter: blur(1px); /* 添加极轻微的毛玻璃效果 */
+    backdrop-filter: blur(1px);
+    /* 添加极轻微的毛玻璃效果 */
 }
 
 /* 游戏结束页面样式 */
@@ -226,9 +250,19 @@ body {
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
 }
 
 .final-score {
@@ -250,12 +284,12 @@ body {
     .game-container {
         transform: scale(0.8);
     }
-    
+
     .game-title {
         font-size: 2.5rem;
     }
-    
+
     .game-over-title {
         font-size: 3rem;
     }
-} 
+}

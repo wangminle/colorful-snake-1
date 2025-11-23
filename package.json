@@ -1,6 +1,6 @@
 {
   "name": "colorful-snake-game",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "一个功能完整、设计精美的HTML5 Canvas彩色贪食蛇游戏",
   "main": "src/index.html",
   "scripts": {
@@ -28,4 +28,4 @@
   "engines": {
     "node": ">=14.0.0"
   }
-} 
+}
